@@ -4,7 +4,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from model import esrt
-from data import DIV2K, Set5_val
+from data import DIV2Kprism, Set5_val
 import utils
 import skimage.color as sc
 import random
@@ -35,11 +35,11 @@ parser.add_argument("--start-epoch", default=1, type=int,
                     help="manual epoch number")
 parser.add_argument("--threads", type=int, default=8,
                     help="number of threads for data loading")
-parser.add_argument("--root", type=str, default="/dataset/",
+parser.add_argument("--root", type=str, default="/npy files/",
                     help='dataset directory')
-parser.add_argument("--n_train", type=int, default=800,
+parser.add_argument("--n_train", type=int, default=31,
                     help="number of training set")
-parser.add_argument("--n_val", type=int, default=1,
+parser.add_argument("--n_val", type=int, default=4,
                     help="number of validation set")
 parser.add_argument("--test_every", type=int, default=1000)
 parser.add_argument("--scale", type=int, default=2,
@@ -74,9 +74,9 @@ device = torch.device('cuda' if cuda else 'cpu')
 
 print("===> Loading datasets")
 
-trainset = DIV2K.div2k(args)
-testset = Set5_val.DatasetFromFolderVal("dataset/Set5/original",
-                                       "dataset/Set5/LRbicx{}/".format(args.scale),
+trainset = DIV2Kprism.div2k(args)
+testset = Set5_val.DatasetFromFolderVal("data for train/PRISM copy/val",
+                                       "data for train/PRISMx4 copy/valx4".format(args.scale),
                                        args.scale)
 training_data_loader = DataLoader(dataset=trainset, num_workers=args.threads, batch_size=args.batch_size, shuffle=True, pin_memory=True, drop_last=True)
 testing_data_loader = DataLoader(dataset=testset, num_workers=args.threads, batch_size=args.testBatchSize,
@@ -232,7 +232,7 @@ def valid(scale):
 
 def save_checkpoint(epoch):
     model_folder = "experiment/checkpoint_ESRT_x{}/".format(args.scale)
-    model_out_path = model_folder + "epoch_{}.pth".format(epoch)
+    model_out_path = model_folder + "x4 epoch_{}.pth".format(epoch)
     if not os.path.exists(model_folder):
         os.makedirs(model_folder)
     torch.save(model.state_dict(), model_out_path)
@@ -254,7 +254,7 @@ for epoch in range(args.start_epoch, args.nEpochs + 1):
     epoch_start = datetime.datetime.now()
     valid(args.scale)
     train(epoch)
-    if epoch%10==0:
+    if epoch%5==0:
         save_checkpoint(epoch)
     epoch_end = datetime.datetime.now()
     print('Epoch cost times: %s' % str(epoch_end-epoch_start))

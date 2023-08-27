@@ -42,8 +42,8 @@ class div2k(data.Dataset):
 
     def _set_filesystem(self, dir_data):
         self.root = dir_data
-        self.dir_hr = '/Users/jasonyuan/ESRT/dataset/PRISM/train'
-        self.dir_lr = '/Users/jasonyuan/ESRT/dataset/PRISMx2/trainx2'
+        self.dir_hr = '/Users/jasonyuan/ESRT 2/npy files/train_npy'
+        self.dir_lr = '/Users/jasonyuan/ESRT 2/npy files/trainx4_npy'
 
     def __getitem__(self, idx):
         lr, hr = self._load_file(idx)

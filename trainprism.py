@@ -14,12 +14,12 @@ from importlib import import_module
 # os.environ["CUDA_VISIBLE_DEVICES"] = '0'
 
 # Training settings
-parser = argparse.ArgumentParser(description="ESRT")
+parser = argparse.ArgumentParser(description="ESRT2")
 parser.add_argument("--batch_size", type=int, default=16,
                     help="training batch size")
 parser.add_argument("--testBatchSize", type=int, default=1,
                     help="testing batch size")
-parser.add_argument("-nEpochs", type=int, default=1000,
+parser.add_argument("-nEpochs", type=int, default=600,
                     help="number of epochs to train")
 parser.add_argument("--lr", type=float, default=2e-4,
                     help="Learning Rate. Default=2e-4")
@@ -35,14 +35,14 @@ parser.add_argument("--start-epoch", default=1, type=int,
                     help="manual epoch number")
 parser.add_argument("--threads", type=int, default=8,
                     help="number of threads for data loading")
-parser.add_argument("--root", type=str, default="/data0/luzs/dataset/",
+parser.add_argument("--root", type=str, default="/npy files/",
                     help='dataset directory')
-parser.add_argument("--n_train", type=int, default=800,
+parser.add_argument("--n_train", type=int, default=31,
                     help="number of training set")
-parser.add_argument("--n_val", type=int, default=1,
+parser.add_argument("--n_val", type=int, default=4,
                     help="number of validation set")
 parser.add_argument("--test_every", type=int, default=1000)
-parser.add_argument("--scale", type=int, default=2,
+parser.add_argument("--scale", type=int, default=4,
                     help="super-resolution scale")
 parser.add_argument("--patch_size", type=int, default=192,
                     help="output patch size")
@@ -72,17 +72,20 @@ args.cuda = False
 cuda = args.cuda
 device = torch.device('cuda' if cuda else 'cpu')
 
-print("===> Loading datasets")
+print("===> Loading datasets, line 75")
+
 
 trainset = DIV2Kprism.div2k(args)
-testset = prismval.DatasetFromFolderVal("dataset/PRISM/val",
-                                       "dataset/PRISMx2/valx2".format(args.scale),
+testset = prismval.DatasetFromFolderVal("data for train/PRISM copy/val",
+                                       "data for train/PRISMx4 copy/valx4".format(args.scale),
                                        args.scale)
 training_data_loader = DataLoader(dataset=trainset, num_workers=args.threads, batch_size=args.batch_size, shuffle=True, pin_memory=True, drop_last=True)
 testing_data_loader = DataLoader(dataset=testset, num_workers=args.threads, batch_size=args.testBatchSize,
                                  shuffle=False)
+print(testing_data_loader)
+print(len(testing_data_loader))
 
-print("===> Building models")
+print("===> Building models, line 88")
 args.is_train = True
 
 
@@ -92,7 +95,7 @@ l1_criterion = nn.L1Loss()
 
 #above prints the scale thing
 
-print("===> Setting GPU")
+print("===> Setting GPU, line 98")
 if cuda:
     model = model.to(device)
     l1_criterion = l1_criterion.to(device)
@@ -120,7 +123,7 @@ if args.pretrained:
     else:
         print("===> no models found at '{}'".format(args.pretrained))
 
-print("===> Setting Optimizer")
+print("===> Setting Optimizer, line 126")
 
 optimizer = optim.Adam(model.parameters(), lr=args.lr)
 
@@ -235,6 +238,7 @@ def valid(scale):
             print("size does not match")
 
     print('past loop')
+    print(len(testing_data_loader))
     print("===> Valid. psnr: {:.4f}, ssim: {:.4f}".format(avg_psnr / len(testing_data_loader), avg_ssim / len(testing_data_loader)))
 
 
@@ -253,11 +257,13 @@ def print_network(net):
     # print(net)
     print('Total number of parameters: %d' % num_params)
 
-print("===> Training")
+
+
+print("===> Training, line 262")
 print_network(model)
 code_start = datetime.datetime.now()
 timer = utils.Timer()
-print('yo')
+print('yo, line 266')
 for epoch in range(args.start_epoch, args.nEpochs + 1):
     print('in epoch')
     t_epoch_start = timer.t()
