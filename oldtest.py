@@ -77,6 +77,7 @@ else:
 
 filelist = utils.get_list(filepath, ext=ext)
 psnr_list = np.zeros(len(filelist))
+#FWA
 ssim_list = np.zeros(len(filelist))
 time_list = np.zeros(len(filelist))
 
