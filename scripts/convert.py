@@ -10,7 +10,7 @@ Use it for training your neural networks in ML/DL projects.
 '''
 
 # Path to image directory
-path = "/Users/jasonyuan/ESRT 2/data for train/PRISMx4 copy/valx4/"
+path = "./data for train/PRISMx4 copy/valx4/"
 dirs = os.listdir(path)
 dirs.sort()
 x_train = []
