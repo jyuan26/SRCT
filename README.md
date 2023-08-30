@@ -65,5 +65,5 @@ python3 test.py  --is_y --test_hr_folder dataset/original_prism --test_lr_folder
 python3 test.py  --is_y \
 --test_hr_folder original \
 --test_lr_folder downscaledx4/ \
---output_folder ./result_of_model/ \
+--output_folder ./result_of_model2/ \
 --checkpoint "experiment/checkpoint_ESRTprism_x4/prism epoch_80.pth" --upscale_factor 4

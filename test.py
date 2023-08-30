@@ -79,9 +79,12 @@ filepath = opt.test_hr_folder
 
 ext = '.png'
 
+max_test_item = 2000
 filelist = utils.get_list(filepath, ext=ext)
+filelist = filelist[:max_test_item]
 psnr_list = np.zeros(len(filelist))
 ssim_list = np.zeros(len(filelist))
+mse_list = np.zeros(len(filelist))
 time_list = np.zeros(len(filelist))
 
 model =  esrt.ESRT(upscale = opt.upscale_factor)#
@@ -94,23 +97,23 @@ i = 0
 
 for imname in filelist:
     im_gt = cv2.imread(imname, cv2.IMREAD_COLOR)[:, :, [2, 1, 0]]  # BGR to RGB
-    print(im_gt.shape)
-    print(imname)
+    #print(im_gt.shape)
+    #print(imname)
     #print(cv2.IMREAD_COLOR)
     im_gt = utils.modcrop(im_gt, opt.upscale_factor)
     im_l = cv2.imread(opt.test_lr_folder + imname.split('/')[-1].split('.')[0] + ext, cv2.IMREAD_COLOR)#[:, :, [2, 1, 0]]  # BGR to RGB
-    print(type(im_l))
-    print(np.any(im_l > 1), im_l.dtype)
+    #print(type(im_l))
+    #print(np.any(im_l > 1), im_l.dtype)
     if len(im_gt.shape) < 3:
         im_gt = im_gt[..., np.newaxis]
         im_gt = np.concatenate([im_gt] * 3, 2)
         im_l = im_l[..., np.newaxis]
         im_l = np.concatenate([im_l] * 3, 2)
     im_input = im_l / 255.0
-    print(im_input.dtype)
+    #print(im_input.dtype)
     im_input = np.transpose(im_input, (2, 0, 1))
     im_input = im_input[np.newaxis, ...]
-    print(np.amax(im_input))
+    #print(np.amax(im_input))
     im_input = torch.from_numpy(im_input).float()
 
 
@@ -125,14 +128,14 @@ for imname in filelist:
 #        torch.cuda.synchronize()
 #        time_list[i] = start.elapsed_time(end)  # milliseconds
 
-    print(type(im_input))
+    #print(type(im_input))
     out_img = utils.tensor2np(out.detach()[0])
-    print(out_img.shape)
-    print(np.amax(out_img))
+    #print(out_img.shape)
+    #print(np.amax(out_img))
     crop_size = opt.upscale_factor
     cropped_sr_img = utils.shave(out_img, crop_size)
     cropped_gt_img = utils.shave(im_gt, crop_size)
-    print(cropped_gt_img.shape, cropped_sr_img.shape)
+    #print(cropped_gt_img.shape, cropped_sr_img.shape)
     opt.is_y = False
     if opt.is_y is True:
         im_label = utils.quantize(sc.rgb2ycbcr(cropped_gt_img)[:, :, 0])
@@ -140,15 +143,16 @@ for imname in filelist:
     else:
         im_label = cropped_gt_img
         im_pre = cropped_sr_img
-    print(im_pre.shape, im_label.shape)
+    #print(im_pre.shape, im_label.shape)
     psnr_list[i] = utils.compute_psnr(im_pre, im_label)
-
-    #ssim_list[i] = utils.compute_ssim(im_pre, im_label)
-
+    ssim_list[i] = utils.compute_ssim(im_pre, im_label)
+    mse_list[i] = utils.calc_mse(im_pre, im_label)
+    print(imname + ",i=" + str(i) + ',PSNR: {:.9f}'.format(psnr_list[i]) +
+          ",mse: {:.9f}".format(mse_list[i]) + ",ssie: {:.9f}".format(ssim_list[i]))
 
     output_folder = os.path.join(opt.output_folder,
                                  imname.split('/')[-1].split('.')[0] + 'x' + str(opt.upscale_factor) + '.png')
-    print(output_folder)
+    #print(output_folder)
 
     if not os.path.exists(opt.output_folder):
         os.makedirs(opt.output_folder)
@@ -157,4 +161,4 @@ for imname in filelist:
     i += 1
 
 
-print("Mean PSNR: {}, SSIM: {}, TIME: {} ms".format(np.mean(psnr_list), np.mean(ssim_list), np.mean(time_list)))
+print("Mean PSNR: {}, SSIM: {}, MSE: {}, TIME: {} ms".format(np.mean(psnr_list), np.mean(ssim_list), np.mean(mse_list), np.mean(time_list)))

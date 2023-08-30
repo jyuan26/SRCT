@@ -30,7 +30,20 @@ def compute_psnr(im1, im2):
     return p
 
 
+def calc_mse(img1, img2):
+    #return ((img1 - img2) ** 2).mean()
+    return np.square(img1 - img2).mean()
+    #return torch.mean((img1 - img2) ** 2)
+
+
 def compute_ssim(im1, im2):
+    isRGB = len(im1.shape) == 3 and im1.shape[-1] == 3
+    s = ssim(im1, im2, K1=0.01, K2=0.03, gaussian_weights=True, sigma=1.5, use_sample_covariance=False,
+             multichannel=isRGB, data_range=255.0, channel_axis=2)
+    return s
+
+
+def old_compute_ssim(im1, im2):
     isRGB = len(im1.shape) == 3 and im1.shape[-1] == 3
     s = ssim(im1, im2, K1=0.01, K2=0.03, gaussian_weights=True, sigma=1.5, use_sample_covariance=False,
              multichannel=isRGB)
