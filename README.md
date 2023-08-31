@@ -60,7 +60,7 @@ python test.py --is_y --test_hr_folder dataset/benchmark/B100/HR/ --test_lr_fold
 
 python3 trainprism.py --scale 4 --patch_size 96 --root ‘dataset’ --threads 0
 
-python3 test.py  --is_y --test_hr_folder dataset/original_prism --test_lr_folder dataset/downscaled4 --output_folder result_of_model/  --checkpoint  experiment/checkpoint_ESRTprism_x4/prism epoch_60.pth --upscale_factor 4
+##python3 test.py  --is_y --test_hr_folder dataset/original_prism --test_lr_folder dataset/downscaled4 --output_folder result_of_model/  --checkpoint  experiment/checkpoint_ESRTprism_x4/prism epoch_60.pth --upscale_factor 4
 
 python3 test.py  --is_y \
 --test_hr_folder project_data/original \
