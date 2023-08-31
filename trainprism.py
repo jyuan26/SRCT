@@ -76,8 +76,8 @@ print("===> Loading datasets, line 75")
 
 
 trainset = DIV2Kprism.div2k(args)
-testset = prismval.DatasetFromFolderVal("data for train/PRISM copy/val",
-                                       "data for train/PRISMx4 copy/valx4".format(args.scale),
+testset = prismval.DatasetFromFolderVal("project_data/data for train/PRISM copy/val",
+                                       "project_data/data for train/PRISMx4 copy/valx4".format(args.scale),
                                        args.scale)
 training_data_loader = DataLoader(dataset=trainset, num_workers=args.threads, batch_size=args.batch_size, shuffle=True, pin_memory=True, drop_last=True)
 testing_data_loader = DataLoader(dataset=testset, num_workers=args.threads, batch_size=args.testBatchSize,
@@ -233,7 +233,7 @@ def valid(scale):
         if (im_pre.shape == im_label.shape):
             print('yo')
             avg_psnr += utils.compute_psnr(im_pre, im_label)
-            avg_ssim += utils.compute_ssim(im_pre, im_label)
+            avg_ssim += utils.train_compute_ssim(im_pre, im_label)
         else:
             print("size does not match")
 
