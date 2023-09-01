@@ -62,7 +62,16 @@ python3 trainprism.py --scale 4 --patch_size 96 --root ‘dataset’ --threads 0
 
 ##python3 test.py  --is_y --test_hr_folder dataset/original_prism --test_lr_folder dataset/downscaled4 --output_folder result_of_model/  --checkpoint  experiment/checkpoint_ESRTprism_x4/prism epoch_60.pth --upscale_factor 4
 
-### test and training after refactoring
+## clean up log
+remove hardcoded test data path  
+more moves for old *.py files to util/old  
+move unused *.py to util/old  
+move data to project_data or project_data/old, part 2 
+move data to project_data or project_data/old  
+add ipynb files that compute PSNR and MSE  
+calculate PSNR, MSE, SSIE in test.py
+
+### test and training after clean up
 
 python3 test.py  --is_y \
 --test_hr_folder project_data/original \
