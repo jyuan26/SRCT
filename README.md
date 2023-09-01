@@ -79,6 +79,8 @@ python3 test.py  --is_y \
 --output_folder ./result_of_model2/ \
 --checkpoint "experiment/checkpoint_ESRTprism_x4/prism epoch_80.pth" --upscale_factor 4
 
+* for fast test, change line "set max_test_item = 2000"
+
 python3 trainprism.py --scale 4 --patch_size 96 --threads 0 \
 --test_hr_folder "project_data/npy files/train_npy" \
 --test_lr_folder "project_data/npy files/trainx4_npy"

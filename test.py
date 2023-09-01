@@ -6,6 +6,8 @@ import utils
 import skimage as sc
 import cv2
 from model import esrt
+import pandas as pd
+import xarray as xr
 from PIL import Image
 
 
@@ -71,6 +73,13 @@ def forward_chop(model, x, shave=10, min_size=60000):
 cuda = False #opt.cuda
 device = torch.device('cuda' if cuda else 'cpu')
 
+pathname = 'project_data/mask/PRISM_ppt_stable_4kmD2_20210101_bil.nc'
+pr = xr.open_dataset(pathname)
+pr
+pr = pr['ppt']
+mask = np.array(pr)
+mask
+
 filepath = opt.test_hr_folder
 # if filepath.split('/')[-2] == 'Set5' or filepath.split('/')[-2] == 'Set14':
 #     ext = '.bmp'
@@ -79,7 +88,7 @@ filepath = opt.test_hr_folder
 
 ext = '.png'
 
-max_test_item = 2000
+max_test_item = 2
 filelist = utils.get_list(filepath, ext=ext)
 filelist = filelist[:max_test_item]
 psnr_list = np.zeros(len(filelist))
@@ -146,7 +155,7 @@ for imname in filelist:
     #print(im_pre.shape, im_label.shape)
     psnr_list[i] = utils.compute_psnr(im_pre, im_label)
     ssim_list[i] = utils.compute_ssim(im_pre, im_label)
-    mse_list[i] = utils.calc_mse(im_pre, im_label)
+    mse_list[i] = utils.calc_mse(im_pre, im_label, mask)
     print(imname + ",i=" + str(i) + ',PSNR: {:.9f}'.format(psnr_list[i]) +
           ",mse: {:.9f}".format(mse_list[i]) + ",ssie: {:.9f}".format(ssim_list[i]))
 
@@ -162,3 +171,5 @@ for imname in filelist:
 
 
 print("Mean PSNR: {}, SSIM: {}, MSE: {}, TIME: {} ms".format(np.mean(psnr_list), np.mean(ssim_list), np.mean(mse_list), np.mean(time_list)))
+psnr = 20 * np.log10(255.0 / np.sqrt(np.mean(mse_list)))
+print("PSNR calculated based on masked MSE is " + str(psnr))

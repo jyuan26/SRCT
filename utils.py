@@ -30,10 +30,27 @@ def compute_psnr(im1, im2):
     return p
 
 
-def calc_mse(img1, img2):
-    #return ((img1 - img2) ** 2).mean()
-    return np.square(img1 - img2).mean()
-    #return torch.mean((img1 - img2) ** 2)
+def MSE(Y, YH):
+    return np.square(Y - YH).mean()
+
+
+def calc_mse(img1, img2, mask):
+    #return np.square(img1 - img2).mean()
+    error = 0
+    count = 0
+    masked = 0
+    for xi, x in enumerate(mask):
+        for yi, y in enumerate(x):
+            if np.isnan(y) == False:
+                # print(ref[xi, yi], model[xi, yi])
+                # print(MSE(ref[xi, yi], model[xi, yi]))
+                error += MSE(img1[xi, yi], img2[xi, yi])
+                count += 1
+            else:
+                masked += 1
+                # print('masked')
+    print(error, count, masked)
+    return error / count
 
 
 def compute_ssim(im1, im2):
