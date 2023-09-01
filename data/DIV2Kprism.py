@@ -39,11 +39,13 @@ class div2k(data.Dataset):
         self.repeat = 10#self.opt.test_every // (self.opt.n_train // self.opt.batch_size)
         self._set_filesystem(self.root)
         self.images_hr, self.images_lr = self._scan()
+        #self.dir_hr = opt.test_hr_folder
+        #self.dir_lr = opt.test_lr_folder
 
     def _set_filesystem(self, dir_data):
         self.root = dir_data
-        self.dir_hr = 'project_data/npy files/train_npy'
-        self.dir_lr = 'project_data/npy files/trainx4_npy'
+        self.dir_hr = self.opt.test_hr_folder #'project_data/npy files/train_npy'
+        self.dir_lr = self.opt.test_lr_folder #'project_data/npy files/trainx4_npy'
 
     def __getitem__(self, idx):
         lr, hr = self._load_file(idx)

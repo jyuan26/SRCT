@@ -57,6 +57,10 @@ parser.add_argument("--isY", action="store_true", default=True)
 parser.add_argument("--ext", type=str, default='.npy')
 parser.add_argument("--phase", type=str, default='train')
 parser.add_argument("--model", type=str, default='ESRT')
+parser.add_argument("--test_hr_folder", type=str, default='original_cropped/',
+                    help='the folder of the target images')
+parser.add_argument("--test_lr_folder", type=str, default='downscaledx4/',
+                    help='the folder of the input images')
 
 args = parser.parse_args()
 print(args)
