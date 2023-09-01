@@ -63,6 +63,7 @@ python3 trainprism.py --scale 4 --patch_size 96 --root ‘dataset’ --threads 0
 ##python3 test.py  --is_y --test_hr_folder dataset/original_prism --test_lr_folder dataset/downscaled4 --output_folder result_of_model/  --checkpoint  experiment/checkpoint_ESRTprism_x4/prism epoch_60.pth --upscale_factor 4
 
 ## clean up log
+use mask file to calculate MSE
 remove hardcoded test data path  
 more moves for old *.py files to util/old  
 move unused *.py to util/old  
@@ -82,5 +83,5 @@ python3 test.py  --is_y \
 * for fast test, change line "set max_test_item = 2000"
 
 python3 trainprism.py --scale 4 --patch_size 96 --threads 0 \
---test_hr_folder "project_data/npy files/train_npy" \
---test_lr_folder "project_data/npy files/trainx4_npy"
+--test_hr_folder "project_data/train_npy_files/high_resolution" \
+--test_lr_folder "project_data/train_npy_files/low_resolution"

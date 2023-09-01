@@ -44,8 +44,8 @@ class div2k(data.Dataset):
 
     def _set_filesystem(self, dir_data):
         self.root = dir_data
-        self.dir_hr = self.opt.test_hr_folder #'project_data/npy files/train_npy'
-        self.dir_lr = self.opt.test_lr_folder #'project_data/npy files/trainx4_npy'
+        self.dir_hr = self.opt.test_hr_folder #'project_data/train_npy_files/high_resolution'
+        self.dir_lr = self.opt.test_lr_folder #'project_data/train_npy_files/low_resolution'
 
     def __getitem__(self, idx):
         lr, hr = self._load_file(idx)
