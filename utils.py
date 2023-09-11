@@ -39,9 +39,9 @@ def calc_mse(img1, img2, mask):
     error = 0
     count = 0
     masked = 0
-    for xi, x in enumerate(mask):
+    for xi, x in enumerate(img1):
         for yi, y in enumerate(x):
-            if np.isnan(y) == False:
+            if True or np.isnan(y) == False:
                 # print(ref[xi, yi], model[xi, yi])
                 # print(MSE(ref[xi, yi], model[xi, yi]))
                 error += MSE(img1[xi, yi], img2[xi, yi])

@@ -88,7 +88,7 @@ filepath = opt.test_hr_folder
 
 ext = '.png'
 
-max_test_item = 2
+max_test_item = 2000
 filelist = utils.get_list(filepath, ext=ext)
 filelist = filelist[:max_test_item]
 psnr_list = np.zeros(len(filelist))
